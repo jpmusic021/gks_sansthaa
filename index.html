@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ગુજરાતી સામાન્ય જ્ઞાન ક્વિઝ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Hind Vadodara', sans-serif;
+            background-color: #e0f7fa; /* Light Blue Background */
+        }
+        .quiz-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .option-btn {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .option-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-color: #0284c7; /* sky-600 */
+        }
+        .correct {
+            background-color: #10b981 !important; /* Emerald-500 */
+            color: white !important;
+            border-color: #059669 !important;
+        }
+        .incorrect {
+            background-color: #ef4444 !important; /* Red-500 */
+            color: white !important;
+            border-color: #dc2626 !important;
+        }
+        .explanation {
+            background-color: #f0f9ff; /* sky-50 */
+            border-left: 5px solid #0ea5e9; /* sky-500 */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-btn {
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover {
+            transform: scale(1.05);
+        }
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+
+    <div class="quiz-container w-full">
+        <header class="mb-6 pb-4 border-b">
+            <h1 class="text-3xl font-bold text-center text-slate-800">સામાન્ય જ્ઞાન ક્વિઝ</h1>
+            <div class="flex justify-between items-center mt-4 text-lg">
+                <div id="question-counter" class="font-semibold text-slate-600"></div>
+                <div class="flex space-x-4">
+                    <span id="score" class="font-bold text-green-600">સ્કોર: 0</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div id="question-container" class="mb-6">
+                <p id="question-text" class="text-xl font-medium text-slate-900"></p>
+            </div>
+            <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Options will be dynamically inserted here -->
+            </div>
+            <div id="explanation-container" class="mt-6 p-4 rounded-lg text-slate-700 hidden">
+                <h3 class="font-bold mb-2">સમજૂતી:</h3>
+                <p id="explanation-text"></p>
+            </div>
+        </main>
+
+        <footer class="mt-8 pt-6 border-t flex justify-between items-center">
+            <button id="prev-btn" class="nav-btn bg-sky-600 text-white font-bold py-2 px-6 rounded-lg shadow-md hover:bg-sky-700 disabled:bg-sky-300">Previous</button>
+            <button id="next-btn" class="nav-btn bg-sky-600 text-white font-bold py-2 px-6 rounded-lg shadow-md hover:bg-sky-700">Next</button>
+        </footer>
+    </div>
+
+    <script>
+        const questions = [
+            // Page 3
+            {
+                question: "ઈન્દિરા ગાંધી રાષ્ટ્રીય કલા કેન્દ્રનું મુખ્યાલય કયા શહેરમાં આવેલું છે?",
+                options: ["નવી દિલ્હી", "મુંબઈ", "કોલકાતા", "ચેન્નઈ"],
+                answer: "નવી દિલ્હી",
+                explanation: "ઈન્દિરા ગાંધી રાષ્ટ્રીય કલા કેન્દ્રનું મુખ્યાલય નવી દિલ્હીમાં આવેલું છે અને તે કલાના ક્ષેત્રમાં સંશોધન અને શૈક્ષણિક અભ્યાસ કરે છે."
+            },
+            {
+                question: "ભારતમાં તેલ અને પ્રાકૃતિક ગેસ નિગમ (ONGC) નું મુખ્યાલય ક્યાં આવેલું છે?",
+                options: ["દેહરાદૂન", "મુંબઈ", "અમદાવાદ", "ગુવાહાટી"],
+                answer: "દેહરાદૂન",
+                explanation: "ઓએનજીસી (Oil and Natural Gas Corporation) નું મુખ્યાલય ઉત્તરાખંડના દેહરાદૂનમાં આવેલું છે."
+            },
+            {
+                question: "મૈત્રી અને દક્ષિણ ગંગોત્રી નામના ભારતીય સંશોધન કેન્દ્રો ક્યાં આવેલા છે?",
+                options: ["એન્ટાર્કટિકા", "આર્કટિક", "હિમાલય", "આંદામાન"],
+                answer: "એન્ટાર્કટિકા",
+                explanation: "મૈત્રી અને દક્ષિણ ગંગોત્રી ભારતના એન્ટાર્કટિકા મહાદ્વીપમાં આવેલા સંશોધન કેન્દ્રો છે."
+            },
+            {
+                question: "આમાંથી કયું ભારતીય સંશોધન સ્ટેશન એન્ટાર્કટિકામાં નથી?",
+                options: ["હિમાલય", "દક્ષિણ ગંગોત્રી", "મૈત્રી", "ભારતી"],
+                answer: "હિમાલય",
+                explanation: "હિમાલય ભારતીય સંશોધન સ્ટેશન એન્ટાર્કટિકામાં નથી, જ્યારે દક્ષિણ ગંગોત્રી, મૈત્રી અને ભારતી એન્ટાર્કટિકામાં આવેલા છે."
+            },
+            {
+                question: "ભારતીય કૃષિ અનુસંધાન પરિષદ (ICAR) નું મુખ્યાલય ક્યાં આવેલું છે?",
+                options: ["નવી દિલ્હી", "લખનઉ", "ભોપાલ", "હૈદરાબાદ"],
+                answer: "નવી દિલ્હી",
+                explanation: "ભારતીય કૃષિ અનુસંધાન પરિષદ (ICAR) નું મુખ્યાલય નવી દિલ્હીમાં આવેલું છે."
+            },
+            {
+                question: "2015 ના અંત સુધીમાં ભારતે એન્ટાર્કટિકામાં કેટલા સંશોધન સ્ટેશન સ્થાપિત કર્યા છે?",
+                options: ["3", "1", "2", "4"],
+                answer: "3",
+                explanation: "ભારતે એન્ટાર્કટિકામાં ત્રણ સંશોધન સ્ટેશન સ્થાપિત કર્યા છે: દક્ષિણ ગંગોત્રી (1984), મૈત્રી (1989), અને ભારતી (2012)."
+            },
+            {
+                question: "ટાટા ઇન્સ્ટિટ્યૂટ ઓફ ફંડામેન્ટલ રિસર્ચ (TIFR) ક્યાં આવેલું છે?",
+                options: ["મુંબઈ", "બેંગલુરુ", "પુણે", "દિલ્હી"],
+                answer: "મુંબઈ",
+                explanation: "ટાટા ઇન્સ્ટિટ્યૂટ ઓફ ફંડામેન્ટલ રિસર્ચ (TIFR) નું મુખ્યાલય મુંબઈમાં આવેલું છે. તે નાભિકીય વિજ્ઞાન અને ગણિતના ક્ષેત્રમાં મૂળભૂત સંશોધન કરે છે."
+            },
+            {
+                question: "રાષ્ટ્રીય ભૂભૌતિકી અનુસંધાન સંસ્થાન (NGRI) ક્યાં આવેલું છે?",
+                options: ["હૈદરાબાદ", "દેહરાદૂન", "નાગપુર", "કોલકાતા"],
+                answer: "હૈદરાબાદ",
+                explanation: "રાષ્ટ્રીય ભૂ-ભૌતિકી અનુસંધાન સંસ્થાન (NGRI) હૈદરાબાદમાં આવેલું છે અને પૃથ્વી વિજ્ઞાનમાં સંશોધન કરે છે."
+            },
+            {
+                question: "બનારસ હિન્દુ વિશ્વવિદ્યાલયની સ્થાપના કોણે કરી હતી?",
+                options: ["મદન મોહન માલવિયા", "એની બેસન્ટ", "જવાહરલાલ નેહરુ", "રવીન્દ્રનાથ ટાગોર"],
+                answer: "મદન મોહન માલવિયા",
+                explanation: "બનારસ હિન્દુ વિશ્વવિદ્યાલયની સ્થાપના મદન મોહન માલવિયા દ્વારા 1916 માં કરવામાં આવી હતી."
+            },
+            {
+                question: "ભારતીય વિજ્ઞાન સંસ્થાન (IISc) ક્યાં આવેલું છે?",
+                options: ["બેંગલુરુ", "મુંબઈ", "દિલ્હી", "ચેન્નઈ"],
+                answer: "બેંગલુરુ",
+                explanation: "ભારતીય વિજ્ઞાન સંસ્થાન (IISc) બેંગલુરુમાં આવેલું છે અને તે વૈજ્ઞાનિક સંશોધનમાં મુખ્ય સંસ્થાન છે."
+            },
+            {
+                question: "સાલારજંગ મ્યુઝિયમ ક્યાં આવેલું છે?",
+                options: ["હૈદરાબાદ", "દિલ્હી", "કોલકાતા", "મુંબઈ"],
+                answer: "હૈદરાબાદ",
+                explanation: "સાલારજંગ મ્યુઝિયમ હૈદરાબાદમાં આવેલું છે અને તે એશિયાનું સૌથી મોટું અને જૂનું સંગ્રહાલય છે."
+            },
+            {
+                question: "સાહિત્ય અકાદમીનું મુખ્યાલય ભારતના કયા શહેરમાં આવેલું છે?",
+                options: ["નવી દિલ્હી", "કોલકાતા", "મુંબઈ", "જયપુર"],
+                answer: "નવી દિલ્હી",
+                explanation: "સાહિત્ય અકાદમીનું મુખ્યાલય નવી દિલ્હીમાં આવેલું છે, અને તે ભારતીય સાહિત્યના વિકાસ માટે કામ કરે છે."
+            },
+            // Page 4
+            {
+                question: "કેન્દ્રીય ભારતીય ભાષા સંસ્થાન (CIIL) કયા રાજ્યમાં આવેલું છે?",
+                options: ["કર્ણાટક", "કેરળ", "તમિલનાડુ", "આંધ્ર પ્રદેશ"],
+                answer: "કર્ણાટક",
+                explanation: "કેન્દ્રીય ભારતીય ભાષા સંસ્થાન (CIIL) ની સ્થાપના 1969 માં કર્ણાટકના મૈસૂરમાં થઈ હતી."
+            },
+            {
+                question: "ન્યુક્લિયર પાવર કોર્પોરેશન ઓફ ઈન્ડિયા લિમિટેડ (NPCIL) નું મુખ્યાલય ક્યાં આવેલું છે?",
+                options: ["મુંબઈ", "દિલ્હી", "કલપક્કમ", "ટ્રોમ્બે"],
+                answer: "મુંબઈ",
+                explanation: "NPCIL નું મુખ્યાલય મુંબઈમાં આવેલું છે અને તે ભારત સરકારના પરમાણુ ઉર્જા વિભાગ હેઠળ કામ કરે છે."
+            },
+            {
+                question: "ભારતીય પશુ કલ્યાણ પરિષદની સ્થાપના કયા વર્ષે કરવામાં આવી હતી?",
+                options: ["1962", "1972", "1952", "1982"],
+                answer: "1962",
+                explanation: "ભારતીય પશુ કલ્યાણ બોર્ડની સ્થાપના 1962 માં થઈ હતી અને તેનું મુખ્યાલય હરિયાણાના બલ્લભગઢમાં આવેલું છે."
+            },
+            {
+                question: "ભારતીય વિજ્ઞાન સંસ્થાન (IISc), બેંગ્લોરના પ્રથમ ભારતીય નિર્દેશક કોણ હતા?",
+                options: ["સી.વી. રમન", "હોમી ભાભા", "સત્યેન્દ્ર નાથ બોઝ", "વિક્રમ સારાભાઈ"],
+                answer: "સી.વી. રમન",
+                explanation: "ભારતીય વિજ્ઞાન સંસ્થાનના પ્રથમ ભારતીય નિર્દેશક સર સી.વી. રમન હતા, જેમના નામે 'રમન પ્રભાવ'ની શોધ છે."
+            },
+            {
+                question: "ભારતના પરમાણુ ઉર્જા આયોગનું મુખ્યાલય ક્યાં આવેલું છે?",
+                options: ["મુંબઈ", "નવી દિલ્હી", "બેંગલુરુ", "કોલકાતા"],
+                answer: "મુંબઈ",
+                explanation: "ભારતનું પરમાણુ ઉર્જા આયોગ મુંબઈમાં આવેલું છે અને તે પરમાણુ ઉર્જા વિભાગના અધીન કામ કરે છે."
+            },
+            {
+                question: "ભારતીય વન અનુસંધાન સંસ્થાન (FRI) ક્યાં આવેલું છે?",
+                options: ["દેહરાદૂન", "શિમલા", "નૈનીતાલ", "ભોપાલ"],
+                answer: "દેહરાદૂન",
+                explanation: "ભારતીય વન અનુસંધાન સંસ્થાન (FRI) દેહરાદૂનમાં આવેલું છે અને તે વન અને પર્યાવરણ સંબંધિત સંશોધન કરે છે."
+            },
+            {
+                question: "ભારતીય પુરાતત્વ સર્વેક્ષણ (ASI) નું મુખ્યાલય ક્યાં આવેલું છે?",
+                options: ["નવી દિલ્હી", "કોલકાતા", "મુંબઈ", "વારાણસી"],
+                answer: "નવી દિલ્હી",
+                explanation: "ભારતીય પુરાતત્વ સર્વેક્ષણનું મુખ્યાલય નવી દિલ્હીમાં આવેલું છે, અને તે પ્રાચીન સ્મારકો અને પુરાતત્વીય સ્થળોના સંરક્ષણ અને સંશોધનનું કાર્ય કરે છે."
+            },
+            // Page 5
+            {
+                question: "કેન્દ્રીય શુષ્ક ક્ષેત્ર અનુસંધાન સંસ્થાન (CAZRI) ક્યાં આવેલું છે?",
+                options: ["જોધપુર", "જયપુર", "જેસલમેર", "બિકાનેર"],
+                answer: "જોધપુર",
+                explanation: "કેન્દ્રીય શુષ્ક ક્ષેત્ર અનુસંધાન સંસ્થાન જોધપુરમાં આવેલું છે."
+            },
+            {
+                question: "ભારત સરકારે નાર્કોટિક્સ કંટ્રોલ બ્યુરો (NCB) ની રચના કયા વર્ષે કરી હતી?",
+                options: ["1986", "1985", "1988", "1990"],
+                answer: "1986",
+                explanation: "નાર્કોટિક્સ કંટ્રોલ બ્યુરોની રચના ભારત સરકારે 17 માર્ચ 1986 ના રોજ કરી હતી. તે ડ્રગ તસ્કરી અને ગેરકાયદેસર પદાર્થોના દુરુપયોગને નિયંત્રિત કરતું મુખ્ય સંસ્થા છે."
+            },
+            {
+                question: "રાષ્ટ્રીય સમુદ્ર વિજ્ઞાન સંસ્થાન (NIO) નું મુખ્યાલય ક્યાં આવેલું છે?",
+                options: ["ગોવા", "કોચી", "વિશાખાપટ્ટનમ", "મુંબઈ"],
+                answer: "ગોવા",
+                explanation: "રાષ્ટ્રીય સમુદ્ર વિજ્ઞાન સંસ્થાનનું મુખ્યાલય ગોવામાં આવેલું છે અને તે સમુદ્ર વિજ્ઞાન સંબંધિત સંશોધન કરે છે."
+            },
+            {
+                question: "ઈન્દિરા ગાંધી વિકાસ અનુસંધાન સંસ્થાન (IGIDR) ક્યાં આવેલું છે?",
+                options: ["મુંબઈ", "દિલ્હી", "પુણે", "હૈદરાબાદ"],
+                answer: "મુંબઈ",
+                explanation: "ઈન્દિરા ગાંધી વિકાસ અનુસંધાન સંસ્થાન મુંબઈમાં આવેલું છે, અને તે વિકાસાત્મક સંશોધન અને શૈક્ષણિક કાર્યોમાં સંકળાયેલું છે."
+            },
+            {
+                question: "કેન્દ્રીય એગમાર્ક (AGMARK) પ્રયોગશાળા ભારતના કયા શહેરમાં આવેલી છે?",
+                options: ["નાગપુર", "મૈસૂર", "પુણે", "ભોપાલ"],
+                answer: "નાગપુર",
+                explanation: "AGMARK પ્રયોગશાળા નાગપુર, મહારાષ્ટ્રમાં આવેલી છે અને તે ખાદ્ય પદાર્થોની ગુણવત્તા સુનિશ્ચિત કરવા માટે પ્રમાણપત્ર પ્રદાન કરે છે."
+            },
+            {
+                question: "ભૌતિક અનુસંધાન પ્રયોગશાળા (PRL) ક્યાં આવેલી છે?",
+                options: ["અમદાવાદ", "બેંગલુરુ", "તિરુવનંતપુરમ", "હૈદરાબાદ"],
+                answer: "અમદાવાદ",
+                explanation: "ભૌતિક અનુસંધાન પ્રયોગશાળા અમદાવાદ, ગુજરાતમાં આવેલી છે અને તે અંતરિક્ષ વિજ્ઞાન અને તેનાથી સંબંધિત ક્ષેત્રોમાં સંશોધન કરે છે."
+            },
+            {
+                question: "રાષ્ટ્રીય પર્યાવરણ એન્જિનિયરિંગ અનુસંધાન સંસ્થાન (NEERI) ક્યાં આવેલું છે?",
+                options: ["નાગપુર", "દિલ્હી", "ચેન્નઈ", "કોલકાતા"],
+                answer: "નાગપુર",
+                explanation: "રાષ્ટ્રીય પર્યાવરણ એન્જિનિયરિંગ અનુસંધાન સંસ્થાન (NEERI) નાગપુર, મહારાષ્ટ્રમાં આવેલું છે અને તે પર્યાવરણ સંબંધિત સંશોધન કરે છે."
+            },
+            // Page 6
+            {
+                question: "આર્કટિકમાં સ્થિત ભારતના પ્રથમ અનુસંધાન સ્ટેશનનું નામ શું છે?",
+                options: ["હિમાદ્રી", "ભારતી", "મૈત્રી", "ગંગોત્રી"],
+                answer: "હિમાદ્રી",
+                explanation: "સ્વાલબાર્ડમાં સ્થિત ભારતના પ્રથમ અનુસંધાન સ્ટેશનનું નામ 'હિમાદ્રી' છે. તે આર્કટિક ક્ષેત્રમાં આવેલું છે."
+            },
+            {
+                question: "BARC નું પૂર્ણ સ્વરૂપ શું છે?",
+                options: ["ભાભા એટોમિક રિસર્ચ સેન્ટર", "ભારત એરોનોટિક્સ રિસર્ચ સેન્ટર", "ભાભા એસ્ટ્રોનોમી રિસર્ચ કાઉન્સિલ", "ભારત એટોમિક રિસર્ચ કોર્પોરેશન"],
+                answer: "ભાભા એટોમિક રિસર્ચ સેન્ટર",
+                explanation: "BARC (ભાભા એટોમિક રિસર્ચ સેન્ટર) ભારતનું મુખ્ય પરમાણુ સંશોધન કેન્દ્ર છે, જે મુંબઈમાં આવેલું છે."
+            },
+            {
+                question: "નેશનલ સ્ટોક એક્સચેન્જ ઓફ ઈન્ડિયા (NSE) નું મુખ્યાલય ક્યાં આવેલું છે?",
+                options: ["મુંબઈ", "નવી દિલ્હી", "કોલકાતા", "અમદાવાદ"],
+                answer: "મુંબઈ",
+                explanation: "NSE નું મુખ્યાલય મુંબઈમાં આવેલું છે અને તે ભારતનું મુખ્ય સ્ટોક એક્સચેન્જ છે."
+            },
+            {
+                question: "ભારતનું કેન્દ્રીય ઔષધિ અનુસંધાન સંસ્થાન ક્યાં આવેલું છે?",
+                options: ["લખનઉ", "દિલ્હી", "પુણે", "હૈદરાબાદ"],
+                answer: "લખનઉ",
+                explanation: "કેન્દ્રીય ઔષધિ અનુસંધાન સંસ્થાન લખનઉમાં આવેલું છે અને તે જૈવચિકિત્સા સંશોધનમાં કાર્ય કરે છે."
+            },
+            {
+                question: "ભારતીય ભૂવૈજ્ઞાનિક સર્વેક્ષણનું મુખ્યાલય ક્યાં આવેલું છે?",
+                options: ["કોલકાતા", "દેહરાદૂન", "નવી દિલ્હી", "નાગપુર"],
+                answer: "કોલકાતા",
+                explanation: "ભારતીય ભૂવૈજ્ઞાનિક સર્વેક્ષણનું મુખ્યાલય કોલકાતામાં આવેલું છે અને તે ખનિજ સંસાધનોનું સર્વેક્ષણ કરે છે."
+            },
+            {
+                question: "ભારતમાં કેન્દ્રીય બટાટા અનુસંધાન સંસ્થાન (CPRI) ક્યાં આવેલું છે?",
+                options: ["શિમલા", "દેહરાદૂન", "ઉટી", "દાર્જિલિંગ"],
+                answer: "શિમલા",
+                explanation: "કેન્દ્રીય બટાટા અનુસંધાન સંસ્થાન શિમલામાં આવેલું છે અને તે બટાટાની ખેતી સંબંધિત સંશોધન કરે છે."
+            },
+            {
+                question: "ભાભા પરમાણુ અનુસંધાન કેન્દ્રનું પૂર્વ નામ શું હતું?",
+                options: ["પરમાણુ ઉર્જા પ્રતિષ્ઠાન, ટ્રોમ્બે", "ભારતીય પરમાણુ ઉર્જા સંસ્થાન", "ટ્રોમ્બે પરમાણુ સંશોધન કેન્દ્ર", "વિક્રમ સારાભાઈ પરમાણુ કેન્દ્ર"],
+                answer: "પરમાણુ ઉર્જા પ્રતિષ્ઠાન, ટ્રોમ્બે",
+                explanation: "ભાભા પરમાણુ અનુસંધાન કેન્દ્રનું પૂર્વ નામ 'પરમાણુ ઉર્જા પ્રતિષ્ઠાન, ટ્રોમ્બે' હતું, જે પાછળથી બદલીને વર્તમાન નામ રાખવામાં આવ્યું."
+            },
+            {
+                question: "દુનિયાના સૌથી મહત્વપૂર્ણ પુરાતાત્વિક સ્થળોમાંનું એક, રાજાઓની ઘાટી (Valley of the Kings), ક્યાં આવેલું છે?",
+                options: ["ઇજિપ્ત", "ગ્રીસ", "ઇરાક", "ઇટાલી"],
+                answer: "ઇજિપ્ત",
+                explanation: "રાજાઓની ઘાટી ઇજિપ્તમાં આવેલી છે, અને તે દુનિયાના સૌથી મહત્વપૂર્ણ પુરાતાત્વિક સ્થળોમાંનું એક છે."
+            },
+            {
+                question: "યેલોસ્ટોન નેશનલ પાર્ક ક્યાં આવેલો છે?",
+                options: ["યુએસએ", "કેનેડા", "ઓસ્ટ્રેલિયા", "રશિયા"],
+                answer: "યુએસએ",
+                explanation: "યેલોસ્ટોન નેશનલ પાર્ક સંયુક્ત રાજ્ય અમેરિકા (USA) માં આવેલો છે અને તે દુનિયાનો પહેલો નેશનલ પાર્ક છે."
+            },
+            {
+                question: "ભારતના કયા સ્થાનને 'કાળા પાણી'ના નામે ઓળખવામાં આવતું હતું?",
+                options: ["આંદામાન દ્વીપ", "લક્ષદ્વીપ", "દમણ અને દીવ", "ગોવા"],
+                answer: "આંદામાન દ્વીપ",
+                explanation: "આંદામાન દ્વીપના પોર્ટ બ્લેરમાં આવેલી સેલ્યુલર જેલને 'કાળા પાણી' ના નામે ઓળખવામાં આવતી હતી. તે સ્વતંત્રતા સેનાનીઓનું બલિદાન સ્થળ હતું."
+            },
+            {
+                question: "ભારતનું રાષ્ટ્રીય પુસ્તકાલય ક્યાં આવેલું છે?",
+                options: ["કોલકાતા", "દિલ્હી", "મુંબઈ", "ચેન્નઈ"],
+                answer: "કોલકાતા",
+                explanation: "ભારતનું રાષ્ટ્રીય પુસ્તકાલય કોલકાતામાં આવેલું છે અને તે ભારતમાં પ્રકાશિત પુસ્તકોનો સંગ્રહ કરે છે."
+            },
+            {
+                question: "કયા શહેરમાં સોનાનું મૂલ્ય નિર્ધારિત કરવામાં આવે છે?",
+                options: ["લંડન", "ન્યૂયોર્ક", "ઝ્યુરિચ", "દુબઈ"],
+                answer: "લંડન",
+                explanation: "સોનાનું મૂલ્ય લંડનમાં નિર્ધારિત થાય છે."
+            },
+            // Page 7
+            {
+                question: "ફ્લેવિયન એમ્ફીથિયેટર તરીકે જાણીતું કોલોઝિયમ (Colosseum) ક્યાં આવેલું છે?",
+                options: ["રોમ", "એથેન્સ", "પેરિસ", "લંડન"],
+                answer: "રોમ",
+                explanation: "કોલોઝિયમ રોમમાં આવેલું છે, અને તે રોમની સ્થાપત્ય કલા અને એન્જિનિયરિંગનું ઉત્કૃષ્ટ ઉદાહરણ છે."
+            },
+            {
+                question: "સ્વતંત્રતાની પ્રતિમા, સ્ટેચ્યુ ઓફ લિબર્ટી (Statue of Liberty) ક્યાં આવેલી છે?",
+                options: ["ન્યૂયોર્ક", "વોશિંગ્ટન ડી.સી.", "પેરિસ", "લંડન"],
+                answer: "ન્યૂયોર્ક",
+                explanation: "સ્ટેચ્યુ ઓફ લિબર્ટી ન્યૂયોર્ક હાર્બરમાં આવેલી છે અને તે અમેરિકી સ્વતંત્રતાનું પ્રતિક છે."
+            },
+            {
+                question: "તવાંગ (Tawang) મઠ ક્યાં આવેલો છે?",
+                options: ["અરુણાચલ પ્રદેશ", "સિક્કિમ", "હિમાચલ પ્રદેશ", "લદ્દાખ"],
+                answer: "અરુણાચલ પ્રદેશ",
+                explanation: "તવાંગ મઠ અરુણાચલ પ્રદેશમાં આવેલો છે, તે ભારતનો સૌથી મોટો બૌદ્ધ મઠ છે."
+            },
+            {
+                question: "મહાભારતમાં ઉલ્લેખિત 'કુરુક્ષેત્ર' નામનું પ્રસિદ્ધ યુદ્ધ ક્ષેત્ર કોની નજીક આવેલું છે?",
+                options: ["અંબાલા શહેર", "દિલ્હી", "પાણીપત", "હસ્તિનાપુર"],
+                answer: "અંબાલા શહેર",
+                explanation: "કુરુક્ષેત્ર યુદ્ધ ક્ષેત્ર અંબાલાની નજીક આવેલું છે, જ્યાં મહાભારતનું મહાન યુદ્ધ થયું હતું."
+            },
+            {
+                question: "પ્રસિદ્ધ તિરુમાલા મંદિર કઈ પહાડી પર આવેલું છે?",
+                options: ["વેંકટાદ્રિ", "નિલગિરિ", "શેષાદ્રિ", "મલયાદ્રિ"],
+                answer: "વેંકટાદ્રિ",
+                explanation: "તિરુમાલા મંદિર આંધ્ર પ્રદેશમાં આવેલું છે અને તે વેંકટાદ્રિ પહાડી પર સ્થિત છે."
+            },
+            {
+                question: "નીચેનામાંથી કયું શહેર વાસ્તુકલાની દ્રષ્ટિએ નિયોજિત શહેર છે?",
+                options: ["ચંદીગઢ", "જયપુર", "ભુવનેશ્વર", "ગાંધીનગર"],
+                answer: "ચંદીગઢ",
+                explanation: "ચંદીગઢ એક નિયોજિત શહેર છે અને તેને પ્રસિદ્ધ વાસ્તુકાર લે કોર્બુઝિયરે ડિઝાઇન કર્યું હતું."
+            },
+            {
+                question: "ગોલ્ડન રોક પેગોડા કયા દેશમાં છે?",
+                options: ["મ્યાનમાર", "થાઈલેન્ડ", "કંબોડિયા", "શ્રીલંકા"],
+                answer: "મ્યાનમાર",
+                explanation: "ગોલ્ડન રોક પેગોડા મ્યાનમારમાં આવેલું છે અને તે એક પ્રસિદ્ધ બૌદ્ધ તીર્થ સ્થળ છે."
+            },
+            // Page 8
+            {
+                question: "'ફોર્બિડન સિટી' ક્યાં આવેલી છે?",
+                options: ["ચીન", "જાપાન", "વિયેતનામ", "કોરિયા"],
+                answer: "ચીન",
+                explanation: "'ફોર્બિડન સિટી' ચીનના બેઇજિંગ શહેરમાં આવેલી છે, આ મહેલ પારંપરિક ચીની વાસ્તુકલાનું અદ્ભુત ઉદાહરણ છે."
+            },
+            {
+                question: "કયા દેશના પ્રધાનમંત્રીના નિવાસને 'ટેમ્પલ ટ્રીઝ' (Temple Trees) કહેવામાં આવે છે?",
+                options: ["શ્રીલંકા", "નેપાળ", "ભૂતાન", "મ્યાનમાર"],
+                answer: "શ્રીલંકા",
+                explanation: "શ્રીલંકાના પ્રધાનમંત્રીના નિવાસને 'ટેમ્પલ ટ્રીઝ' કહેવામાં આવે છે."
+            },
+            {
+                question: "કર્ણાટકના શિવમોગા જિલ્લાનું કયું ગામ રોજબરોજની વાતચીતમાં સંસ્કૃતનો ઉપયોગ કરે છે?",
+                options: ["મત્તુર", "હમ્પી", "શ્રવણબેલગોલા", "ઉડુપી"],
+                answer: "મત્તુર",
+                explanation: "કર્ણાટકના શિવમોગા જિલ્લાનું મત્તુર ગામ રોજબરોજની વાતચીતમાં સંસ્કૃતનો ઉપયોગ કરે છે."
+            },
+            {
+                question: "કાગળની શોધ ક્યાં થઈ હતી?",
+                options: ["ચીન", "ઇજિપ્ત", "ભારત", "ગ્રીસ"],
+                answer: "ચીન",
+                explanation: "કાગળની શોધ ચીનમાં થઈ હતી."
+            },
+            {
+                question: "નોબેલ મ્યુઝિયમ વિશ્વમાં ક્યાં આવેલું છે?",
+                options: ["સ્ટોકહોમ", "ઓસ્લો", "લંડન", "જિનીવા"],
+                answer: "સ્ટોકહોમ",
+                explanation: "નોબેલ મ્યુઝિયમ સ્વીડનના સ્ટોકહોમમાં આવેલું છે અને તે નોબેલ પુરસ્કારના સ્થાપક આલ્ફ્રેડ નોબલની યાદમાં બનાવવામાં આવ્યું છે."
+            },
+            {
+                question: "ભારતનું 'સ્ટેચ્યુ ઓફ યુનિટી' (Statue of Unity) કયા રાજ્યમાં આવેલું છે?",
+                options: ["ગુજરાત", "મહારાષ્ટ્ર", "રાજસ્થાન", "મધ્ય પ્રદેશ"],
+                answer: "ગુજરાત",
+                explanation: "'સ્ટેચ્યુ ઓફ યુનિટી' ગુજરાત રાજ્યના નર્મદા જિલ્લાના કેવડિયામાં આવેલું છે, તે વિશ્વની સૌથી ઊંચી મૂર્તિ છે."
+            },
+            // Page 9
+            {
+                question: "પ્રસિદ્ધ વાઘા બોર્ડર ક્યાં આવેલી છે?",
+                options: ["અમૃતસર", "લાહોર", "જેસલમેર", "જમ્મુ"],
+                answer: "અમૃતસર",
+                explanation: "વાઘા બોર્ડર અમૃતસરમાં આવેલી છે, તે ભારત અને પાકિસ્તાન વચ્ચે એકમાત્ર સડક સીમા રેખા છે."
+            },
+            {
+                question: "કેદારનાથ મંદિર, ઉત્તરાખંડના કયા જિલ્લામાં આવેલું છે?",
+                options: ["રુદ્રપ્રયાગ", "ચમોલી", "ઉત્તરકાશી", "ટિહરી ગઢવાલ"],
+                answer: "રુદ્રપ્રયાગ",
+                explanation: "કેદારનાથ મંદિર ઉત્તરાખંડના રુદ્રપ્રયાગ જિલ્લામાં આવેલું છે અને તે ભગવાન શિવને સમર્પિત છે."
+            },
+            {
+                question: "ભારત અને નેપાળ વચ્ચે કયા ભૂભાગ પર વિવાદ ચાલી રહ્યો છે?",
+                options: ["કાલાપાની", "ડોકલામ", "લિપુલેખ", "સુસ્તા"],
+                answer: "કાલાપાની",
+                explanation: "કાલાપાની ક્ષેત્ર પર ભારત અને નેપાળ વચ્ચે વિવાદ ચાલી રહ્યો છે, આ ક્ષેત્રમાં ચીન, નેપાળ અને ભારતની સરહદ મળે છે."
+            },
+            {
+                question: "'મૃગનયનીનો મહેલ' ક્યાં આવેલો છે?",
+                options: ["ગ્વાલિયર", "જયપુર", "ઉદયપુર", "ભોપાલ"],
+                answer: "ગ્વાલિયર",
+                explanation: "'મૃગનયનીનો મહેલ' મધ્યપ્રદેશના ગ્વાલિયરમાં આવેલો છે અને તે 8મી સદીમાં રાજા માન સિંહ તોમર દ્વારા બનાવવામાં આવ્યો હતો."
+            },
+            {
+                question: "કયા શહેરને ભારતમાં 'મહેલોનું શહેર (The City of Palaces)' તરીકે ઓળખવામાં આવે છે?",
+                options: ["કોલકાતા", "જયપુર", "મૈસૂર", "હૈદરાબાદ"],
+                answer: "કોલકાતા",
+                explanation: "કોલકાતાને ભારતમાં 'મહેલોનું શહેર' કહેવામાં આવે છે અને તે બંગાળની સંસ્કૃતિ અને ઇતિહાસનો એક મહત્વપૂર્ણ ભાગ છે."
+            },
+            {
+                question: "ભારત રત્ન પુરસ્કારના પ્રથમ પ્રાપ્તકર્તા અને સ્વતંત્ર પાર્ટી (1959)ના સ્થાપક કોણ હતા?",
+                options: ["સી. રાજગોપાલાચારી", "સર્વપલ્લી રાધાકૃષ્ણન", "સી. વી. રમન", "જવાહરલાલ નેહરુ"],
+                answer: "સી. રાજગોપાલાચારી",
+                explanation: "સી. રાજગોપાલાચારી, જે ભારત રત્નના પ્રથમ પ્રાપ્તકર્તા હતા, તેમણે સ્વતંત્ર પાર્ટીની સ્થાપના કરી હતી."
+            },
+            // Page 10
+            {
+                question: "કોને 'લેડી વિથ અ લેમ્પ' નું બિરુદ આપવામાં આવ્યું હતું?",
+                options: ["ફ્લોરેન્સ નાઈટિંગેલ", "મધર ટેરેસા", "સરોજિની નાયડુ", "એની બેસન્ટ"],
+                answer: "ફ્લોરેન્સ નાઈટિંગેલ",
+                explanation: "ફ્લોરેન્સ નાઈટિંગેલને 'લેડી વિથ અ લેમ્પ' નું બિરુદ આપવામાં આવ્યું હતું, અને તે આધુનિક નર્સિંગના જનક માનવામાં આવે છે."
+            },
+            {
+                question: "કોને વ્યવહારિક મનોવિજ્ઞાન (Experimental Psychology) ના જનક માનવામાં આવે છે?",
+                options: ["વિલ્હેમ વુન્ટ", "સિગમંડ ફ્રોઈડ", "ઇવાન પાવલોવ", "જીન પિયાજે"],
+                answer: "વિલ્હેમ વુન્ટ",
+                explanation: "વિલ્હેમ વુન્ટને વ્યવહારિક મનોવિજ્ઞાનના જનક માનવામાં આવે છે અને તેમણે મનોવિજ્ઞાનની પ્રથમ પ્રયોગશાળા સ્થાપિત કરી હતી."
+            },
+            {
+                question: "બેનઝીર ભુટ્ટો કોણ હતી?",
+                options: ["પાકિસ્તાનના 11મા પ્રધાનમંત્રી", "બાંગ્લાદેશના પ્રથમ મહિલા પ્રમુખ", "ભારતના વિદેશ મંત્રી", "અફઘાનિસ્તાનના રાજદૂત"],
+                answer: "પાકિસ્તાનના 11મા પ્રધાનમંત્રી",
+                explanation: "બેનઝીર ભુટ્ટો પાકિસ્તાનના 11મા પ્રધાનમંત્રી હતા અને તે પાકિસ્તાનના પ્રથમ મહિલા પ્રધાનમંત્રી હતા."
+            },
+            {
+                question: "રામાનંદ સાગરની 'રામાયણ' ટી.વી. શ્રેણીમાં સીતાની ભૂમિકા કોણે ભજવી હતી?",
+                options: ["દીપિકા ચિખલિયા", "હેમા માલિની", "જયા પ્રદા", "અરુણા ઈરાની"],
+                answer: "દીપિકા ચિખલિયા",
+                explanation: "રામાનંદ સાગરની 'રામાયણ' ટી.વી. શ્રેણીમાં સીતાની ભૂમિકા દીપિકા ચિખલિયાએ ભજવી હતી."
+            },
+            // Page 11
+            {
+                question: "એમ.એસ. સ્વામીનાથન કોણ છે?",
+                options: ["એક કૃષિ વૈજ્ઞાનિક", "એક ભૌતિકશાસ્ત્રી", "એક અર્થશાસ્ત્રી", "ભૂતપૂર્વ રાષ્ટ્રપતિ"],
+                answer: "એક કૃષિ વૈજ્ઞાનિક",
+                explanation: "એમ.એસ. સ્વામીનાથન ભારતના મુખ્ય કૃષિ વૈજ્ઞાનિક છે, જેમણે હરિત ક્રાંતિમાં મહત્વપૂર્ણ યોગદાન આપ્યું."
+            },
+            {
+                question: "'મિસાઈલ મેન ઓફ ઈન્ડિયા' તરીકે કોણ ઓળખાય છે?",
+                options: ["ડૉ. એપીજે અબ્દુલ કલામ", "હોમી ભાભા", "વિક્રમ સારાભાઈ", "સતીશ ધવન"],
+                answer: "ડૉ. એપીજે અબ્દુલ કલામ",
+                explanation: "ડૉ. એપીજે અબ્દુલ કલામને 'મિસાઈલ મેન ઓફ ઈન્ડિયા' તરીકે ઓળખવામાં આવે છે, અને તેઓ ભારતના રાષ્ટ્રપતિ રહી ચૂક્યા હતા."
+            },
+            {
+                question: "ભારતની સર્વોચ્ચ અદાલતની પ્રથમ ભારતીય મહિલા ન્યાયાધીશ કોણ હતી?",
+                options: ["ફાતિમા બીવી", "લીલા સેઠ", "અન્ના ચાંડી", "સુજાતા મનોહર"],
+                answer: "ફાતિમા બીવી",
+                explanation: "ફાતિમા બીવી સર્વોચ્ચ અદાલતની પ્રથમ ભારતીય મહિલા ન્યાયાધીશ હતી, જેમને 1989માં નિયુક્ત કરવામાં આવ્યા હતા."
+            },
+            {
+                question: "માઉન્ટ એવરેસ્ટની ટોચ પર પહોંચનારી પ્રથમ મહિલા કોણ હતી?",
+                options: ["જુંકો તેબઈ", "બચેન્દ્રી પાલ", "વંદા રુટકિવિઝ", "એલિસન હરગ્રેવ્સ"],
+                answer: "જુંકો તેબઈ",
+                explanation: "જુંકો તેબઈ (જાપાન) માઉન્ટ એવરેસ્ટની ટોચ પર પહોંચનારી પ્રથમ મહિલા હતી."
+            },
+            {
+                question: "મેડિકલ સ્કૂલમાંથી સ્નાતક થનારી દુનિયાની પ્રથમ મહિલા કોણ હતી?",
+                options: ["એલિઝાબેથ બ્લેકવેલ", "મેરી ક્યુરી", "ફ્લોરેન્સ નાઈટિંગેલ", "આનંદીબાઈ જોશી"],
+                answer: "એલિઝાબેથ બ્લેકવેલ",
+                explanation: "એલિઝાબેથ બ્લેકવેલ મેડિકલ સ્કૂલમાંથી સ્નાતક થનારી દુનિયાની પ્રથમ મહિલા હતી, અને તેમણે અમેરિકી તબીબી શિક્ષણમાં મહત્વપૂર્ણ યોગદાન આપ્યું."
+            },
+            {
+                question: "શ્રીલંકાની પ્રથમ મહિલા પ્રધાનમંત્રી કોણ હતી?",
+                options: ["સિરિમાવો ભંડારનાયકે", "ચંદ્રિકા કુમારતુંગા", "ઇન્દિરા ગાંધી", "બેનઝીર ભુટ્ટો"],
+                answer: "સિરિમાવો ભંડારનાયકે",
+                explanation: "સિરિમાવો ભંડારનાયકે શ્રીલંકાની અને વિશ્વની પ્રથમ મહિલા પ્રધાનમંત્રી હતી, જેમણે ત્રણ વખત આ પદનો કાર્યભાર સંભાળ્યો હતો."
+            },
+            {
+                question: "પ્રથમ પૃથ્વી શિખર સંમેલન ક્યાં આયોજિત કરવામાં આવ્યું હતું?",
+                options: ["રિયો ડી જાનેરો", "સ્ટોકહોમ", "જિનીવા", "ન્યૂયોર્ક"],
+                answer: "રિયો ડી જાનેરો",
+                explanation: "પ્રથમ પૃથ્વી શિખર સંમેલન 1992 માં બ્રાઝિલના રિયો ડી જાનેરોમાં આયોજિત થયું હતું, જેમાં પર્યાવરણ અને વિકાસ પર ચર્ચા કરવામાં આવી હતી."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answeredState = new Array(questions.length).fill(null); // To store user answers
+
+        const questionCounterEl = document.getElementById('question-counter');
+        const scoreEl = document.getElementById('score');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainerEl = document.getElementById('options-container');
+        const explanationContainerEl = document.getElementById('explanation-container');
+        const explanationTextEl = document.getElementById('explanation-text');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+
+        function loadQuestion() {
+            // Reset state
+            explanationContainerEl.classList.add('hidden');
+            optionsContainerEl.innerHTML = '';
+
+            const currentQuestion = questions[currentQuestionIndex];
+            
+            // Display question and counter
+            questionTextEl.textContent = currentQuestion.question;
+            questionCounterEl.textContent = `પ્રશ્ન ${currentQuestionIndex + 1} / ${questions.length}`;
+            
+            // Shuffle options to make it more interesting
+            const shuffledOptions = [...currentQuestion.options].sort(() => Math.random() - 0.5);
+
+            // Create option buttons
+            shuffledOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('option-btn', 'w-full', 'p-4', 'text-left', 'bg-white', 'rounded-lg', 'shadow', 'border-2', 'border-slate-200', 'hover:bg-sky-100');
+                button.onclick = () => selectAnswer(option, button);
+                optionsContainerEl.appendChild(button);
+            });
+
+            // Update button states
+            updateNavButtons();
+
+            // If question was already answered, show the result
+            if (answeredState[currentQuestionIndex] !== null) {
+                showPreviousAnswer();
+            }
+        }
+
+        function selectAnswer(selectedOption, btn) {
+            if (answeredState[currentQuestionIndex] !== null) return; // Prevent re-answering
+
+            const currentQuestion = questions[currentQuestionIndex];
+            const isCorrect = selectedOption === currentQuestion.answer;
+            
+            answeredState[currentQuestionIndex] = { selected: selectedOption, correct: isCorrect };
+
+            if (isCorrect) {
+                score += 1;
+                btn.classList.add('correct');
+            } else {
+                score -= 0.25;
+                btn.classList.add('incorrect');
+                // Highlight the correct answer
+                Array.from(optionsContainerEl.children).forEach(button => {
+                    if (button.textContent === currentQuestion.answer) {
+                        button.classList.add('correct');
+                    }
+                });
+            }
+
+            // Update score display
+            scoreEl.textContent = `સ્કોર: ${score.toFixed(2)}`;
+
+            // Show explanation and disable buttons
+            explanationTextEl.textContent = currentQuestion.explanation;
+            explanationContainerEl.classList.remove('hidden');
+            Array.from(optionsContainerEl.children).forEach(button => {
+                button.disabled = true;
+                button.style.cursor = 'not-allowed';
+            });
+        }
+
+        function showPreviousAnswer() {
+            const previousAnswer = answeredState[currentQuestionIndex];
+            if (!previousAnswer) return;
+
+            const currentQuestion = questions[currentQuestionIndex];
+            
+            Array.from(optionsContainerEl.children).forEach(button => {
+                if (button.textContent === currentQuestion.answer) {
+                    button.classList.add('correct');
+                }
+                if (button.textContent === previousAnswer.selected && !previousAnswer.correct) {
+                    button.classList.add('incorrect');
+                }
+                button.disabled = true;
+                button.style.cursor = 'not-allowed';
+            });
+
+            explanationTextEl.textContent = currentQuestion.explanation;
+            explanationContainerEl.classList.remove('hidden');
+        }
+
+        function updateNavButtons() {
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = currentQuestionIndex === questions.length - 1;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        });
+
+        // Initial load
+        loadQuestion();
+    </script>
+
+</body>
+</html>
